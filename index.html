@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element Study Game</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Element Study Game</h1>
+
+        <!-- Main Menu -->
+        <div id="mainMenu" class="main-menu">
+            <div style="display: flex; gap: 10px; margin-bottom: 30px;">
+                <button class="menu-btn" onclick="showStudySets()" style="flex: 1;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">📚</div>
+                    <div>Study</div>
+                </button>
+                <button class="menu-btn" onclick="showReports()" style="flex: 1;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">📊</div>
+                    <div>Progress Report</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Study Sets Screen -->
+        <div id="studySetsScreen" class="hidden">
+            <h2 style="color: #667eea; margin-bottom: 20px; font-size: 1.5em;">📚 Select Study Set</h2>
+            <div id="studySetsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            <button class="add-set-btn" onclick="showAddSetModal()" style="width: 100%; margin-top: 15px; margin-bottom: 10px;">+ Add New Study Set</button>
+            <button class="back-btn" onclick="backToMenu()" style="width: 100%; margin-bottom: 0;">← Back</button>
+        </div>
+
+        <!-- Add Set Modal -->
+        <div id="addSetModal" class="modal hidden">
+            <div class="modal-content">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Create New Study Set</h2>
+
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label style="margin-bottom: 8px; display: block;">Set Name:</label>
+                    <input type="text" id="setNameInput" placeholder="e.g., Chapter 2 Elements" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                </div>
+
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label style="margin-bottom: 8px; display: block;">Description (optional):</label>
+                    <input type="text" id="setDescInput" placeholder="e.g., Elements 20-40" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                </div>
+
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label style="margin-bottom: 8px; display: block;">Select Elements (comma-separated atomic numbers or ranges):</label>
+                    <textarea id="setElementsInput" placeholder="e.g., 1-20, 24-36, 22, 38, 42, 43, 92, 95, 99, 101, 47-54, 55-57, 74, 77-89" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; min-height: 80px; font-family: monospace; resize: vertical;"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button class="submit-btn" onclick="createNewSet()" style="flex: 1;">Create Set</button>
+                    <button class="skip-btn" onclick="closeAddSetModal()" style="flex: 1;">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mode Selector -->
+        <div id="modeSelector" class="mode-selector hidden">
+            <p style="color: #666; margin-bottom: 20px;">Choose your mode for <strong id="selectedSetName"></strong>:</p>
+            <div class="mode-buttons">
+                <div class="mode-btn" onclick="startMode('study')">
+                    <div class="mode-icon">📚</div>
+                    <div>Study Mode</div>
+                    <div class="mode-description">Practice with hints and answers available</div>
+                </div>
+                <div class="mode-btn" onclick="startMode('test')">
+                    <div class="mode-icon">✅</div>
+                    <div>Test Mode</div>
+                    <div class="mode-description">Challenge yourself without help</div>
+                </div>
+            </div>
+            <button class="back-btn" onclick="backFromModeSelector()" style="width: 100%; margin-top: 20px;">← Back</button>
+        </div>
+
+        <!-- Report Screen -->
+        <div id="reportScreen" class="hidden">
+            <h2 style="color: #667eea; margin-bottom: 20px; font-size: 1.5em;">📊 Your Progress Report</h2>
+            <div id="reportContent" style="background: #f8f9fa; padding: 20px; border-radius: 10px;"></div>
+            <button class="back-btn" onclick="backToMenu()" style="width: 100%; margin-top: 20px;">← Back</button>
+        </div>
+
+        <!-- Game Container -->
+        <div id="gameContainer" class="hidden">
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px; position: relative;">
+                <div class="mode-badge" id="modeBadge">Study Mode</div>
+                <button class="back-btn" onclick="backFromGame()" style="position: absolute; right: 0; padding: 8px 12px; font-size: 0.85em; border: 1px solid #667eea;">← Back</button>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <label for="voiceSelect" style="display: inline; margin-right: 10px;">Voice:</label>
+                <select id="voiceSelect" style="padding: 8px; border-radius: 5px; border: 2px solid #ddd; font-size: 0.9em;">
+                    <option value="">Loading voices...</option>
+                </select>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div id="gameScreen">
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number" id="currentNum">1</div>
+                        <div class="stat-label">Attempts</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="correctNum">0</div>
+                        <div class="stat-label">Mastered</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="totalNum">89</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                </div>
+
+                <div class="game-area">
+                    <div class="input-group">
+                        <label for="elementName">Element Name:</label>
+                        <input type="text" id="elementName" placeholder="Type the element name" autocomplete="off">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="elementSymbol">Element Symbol:</label>
+                        <input type="text" id="elementSymbol" placeholder="Type the element symbol" autocomplete="off">
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="submit-btn" id="submitBtn">Submit</button>
+                        <button class="skip-btn" id="skipBtn">Skip</button>
+                        <button class="audio-btn" id="playAudio">🔊</button>
+                    </div>
+
+                    <div class="btn-group" id="studyButtons" style="display: none;">
+                        <button class="hint-btn" id="hintBtn">💡 Hint</button>
+                        <button class="show-answer-btn" id="showAnswerBtn">👁️ Show Answer</button>
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+                </div>
+            </div>
+
+            <div class="complete-screen" id="completeScreen">
+                <h2>🎉 Complete!</h2>
+                <div class="final-stats">
+                    <div class="final-stat">Score: <span id="finalScore"></span></div>
+                    <div class="final-stat">Time: <span id="finalAccuracy"></span></div>
+                </div>
+                <button class="restart-btn" id="restartBtn">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts loaded in dependency order -->
+    <script src="js/elements-data.js"></script>
+    <script src="js/study-sets.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
