@@ -1,28 +1,87 @@
 
-const SCREENS = ['mainMenu', 'studySetsScreen', 'modeSelector', 'reportScreen', 'gameContainer'];
+// Multi-page UI
+// Pages include: menu.html, study.html, reports.html.
+// Logic here should only touch elements that exist on the current page.
 
-function showOnly(id) {
-    SCREENS.forEach(s => {
-        document.getElementById(s).classList.toggle('hidden', s !== id);
-    });
+function hasId(id) {
+    return document.getElementById(id) !== null;
+}
+
+function showReports() {
+    if (!hasId('reportContent')) return;
+
+    let html = '<div style="display: flex; flex-direction: column; gap: 20px;">';
+
+    for (const [, setData] of Object.entries(studySets)) {
+        const ids = setData.elements;
+        const snap = {};
+        ids.forEach(id => {
+            snap[id] = elementStats[id] || { attempts: 0, correct: 0, consecutiveCorrect: 0 };
+        });
+
+        const totalAttempts = Object.values(snap).reduce((s, e) => s + e.attempts, 0);
+        const totalCorrect  = Object.values(snap).reduce((s, e) => s + e.correct,  0);
+        const mastered      = Object.values(snap).filter(e => e.consecutiveCorrect >= 2).length;
+        const learning      = Object.values(snap).filter(e => e.attempts > 0 && e.consecutiveCorrect < 2).length;
+        const newEl         = Object.values(snap).filter(e => e.attempts === 0).length;
+
+        const accuracy  = totalAttempts > 0 ? Math.round(totalCorrect / totalAttempts * 100) : 0;
+        const readiness = ids.length > 0    ? Math.round(mastered / ids.length * 100) : 0;
+        const readinessStatus = readiness >= 80 ? '🚢 Ready!' : readiness >= 50 ? '🛬 Getting there…' : '☔ Keep studying';
+
+        html += `
+            <div style="background: white; padding: 20px; border-radius: 10px; border-top: 4px solid #667eea;">
+                <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.1em;">${setData.name}</h3>
+                <div class="report-grid">
+                    <div style="padding: 0;">
+                        <div class="report-stat-title">Mastered</div>
+                        <div class="report-stat-value" style="color: #28a745;">${mastered}/${ids.length}</div>
+                    </div>
+                    <div style="padding: 0;">
+                        <div class="report-stat-title">Accuracy</div>
+                        <div class="report-stat-value" style="color: #667eea;">${accuracy}%</div>
+                    </div>
+                    <div style="padding: 0;">
+                        <div class="report-stat-title">Learning</div>
+                        <div class="report-stat-value" style="color: #ffc107;">${learning}</div>
+                    </div>
+                    <div style="padding: 0;">
+                        <div class="report-stat-title">Not Started</div>
+                        <div class="report-stat-value" style="color: #6c757d;">${newEl}</div>
+                    </div>
+                </div>
+                <div class="readiness-meter">
+                    <div class="readiness-fill" style="width: ${readiness}%">
+                        ${readiness > 10 ? readiness + '%' : ''}
+                    </div>
+                </div>
+                <div class="readiness-label">${readinessStatus}</div>
+            </div>
+        `;
+    }
+
+    html += '</div>';
+    document.getElementById('reportContent').innerHTML = html;
 }
 
 function backToMenu() {
-    showOnly('mainMenu');
+    window.location.href = './menu.html';
 }
 
-function backFromModeSelector() {
-    showOnly('studySetsScreen');
-}
+function backFromModeSelector() {}
 
 function backFromGame() {
-    showOnly('studySetsScreen');
     currentStudySetId = null;
-    studySetElements  = [];
+    studySetElements = [];
+    // keep on same page; user can start again
+    const modeSelector = document.getElementById('modeSelector');
+    if (modeSelector) modeSelector.classList.remove('hidden');
+    const gameContainer = document.getElementById('gameContainer');
+    if (gameContainer) gameContainer.classList.add('hidden');
 }
 
 function showStudySets() {
-    showOnly('studySetsScreen');
+    // study.html is already the study sets page
     renderStudySets();
 }
 

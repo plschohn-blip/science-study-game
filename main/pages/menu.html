@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element Study Game - Menu</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Element Study Game</h1>
+
+        <div class="main-menu">
+            <div style="display: flex; gap: 10px; margin-bottom: 30px;">
+                <button class="menu-btn" onclick="goStudy()" style="flex: 1;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">📚</div>
+                    <div>Study</div>
+                </button>
+                <button class="menu-btn" onclick="goReports()" style="flex: 1;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">📊</div>
+                    <div>Progress Report</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goStudy() {
+            window.location.href = './study.html';
+        }
+        function goReports() {
+            window.location.href = './reports.html';
+        }
+    </script>
+</body>
+</html>
+

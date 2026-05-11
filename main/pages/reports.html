@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element Study Game - Reports</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Element Study Game</h1>
+
+        <div style="text-align:center; margin-bottom: 10px;">
+            <h2 style="color: #667eea; margin-bottom: 20px; font-size: 1.5em;">📊 Your Progress Report</h2>
+        </div>
+
+        <div id="reportContent" style="background: #f8f9fa; padding: 20px; border-radius: 10px;"></div>
+
+        <button class="back-btn" onclick="backToMenu()" style="width: 100%; margin-top: 20px;">80d Back</button>
+        <div style="margin-top: 10px; display:flex; gap: 10px;">
+            <button class="back-btn" onclick="goStudy()" style="flex:1;"> 9ea Study</button>
+            <button class="back-btn" onclick="goMenu()" style="flex:1;"> 80d Menu</button>
+        </div>
+    </div>
+
+    <script src="../js/elements-data.js"></script>
+    <script src="../js/study-sets.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/game.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/main.js"></script>
+
+    <script>
+        function goMenu(){ window.location.href = './menu.html'; }
+        function goStudy(){ window.location.href = './study.html'; }
+
+        // Populate report.
+        // game.js initializes elementStats on initGame(); for report we compute from elementStats.
+        loadStudySets();
+        studySetElements = [];
+        initGame();
+        showReports();
+
+        function backToMenu(){ window.location.href = './menu.html'; }
+    </script>
+</body>
+</html>
+
