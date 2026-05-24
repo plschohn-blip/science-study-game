@@ -7,6 +7,23 @@ function hasId(id) {
     return document.getElementById(id) !== null;
 }
 
+function showOnly(elementId) {
+    // Hide all main screens and containers
+    const screensToHide = ['studySetsScreen', 'studySetsContainer', 'modeSelector', 'gameContainer', 'reportScreen'];
+    screensToHide.forEach(screenId => {
+        const el = document.getElementById(screenId);
+        if (el) el.classList.add('hidden');
+    });
+
+    // Also close the modal if it's open
+    const modal = document.getElementById('addSetModal');
+    if (modal) modal.classList.add('hidden');
+
+    // Show the specified element
+    const targetEl = document.getElementById(elementId);
+    if (targetEl) targetEl.classList.remove('hidden');
+}
+
 function showReports() {
     if (!hasId('reportContent')) return;
 
@@ -68,16 +85,15 @@ function backToMenu() {
     window.location.href = './menu.html';
 }
 
-function backFromModeSelector() {}
+function backFromModeSelector() {
+    showOnly('studySetsContainer');
+}
 
 function backFromGame() {
     currentStudySetId = null;
     studySetElements = [];
-    // keep on same page; user can start again
-    const modeSelector = document.getElementById('modeSelector');
-    if (modeSelector) modeSelector.classList.remove('hidden');
-    const gameContainer = document.getElementById('gameContainer');
-    if (gameContainer) gameContainer.classList.add('hidden');
+    // Show mode selector again (stay on study page to allow selecting a different set)
+    showOnly('modeSelector');
 }
 
 function showStudySets() {
