@@ -37,7 +37,7 @@ Open `index.html` in any modern browser — no build step or server required.
 
 OR
 
-go to [https://plschohn-blip.github.io/science-study-game/pages/study.html](url)
+go to [https://plschohn-blip.github.io/science-study-game/pages/study.html](https://plschohn-blip.github.io/science-study-game/pages/study.html)
 
 ---
 
