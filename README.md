@@ -35,6 +35,10 @@ Open `index.html` in any modern browser — no build step or server required.
 > python3 -m http.server 8080
 > ```
 
+OR
+
+go to [https://plschohn-blip.github.io/science-study-game/pages/study.html](url)
+
 ---
 
 ## Gameplay
